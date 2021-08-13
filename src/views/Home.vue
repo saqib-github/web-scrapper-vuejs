@@ -31,9 +31,8 @@
     <v-container>
       <v-row>
         <v-col cols="10">
-          <div v-if="title && price && img_url">
-            <v-card height="650" width="350">
-              <v-img contain class="white--text" height="300px" :src="img_url">
+            <v-card height="650" width="350" v-if="title && price && img_url">
+              <v-img contain class="white--text" height="300px" :src="img_url" width="300" max-height="500">
               </v-img>
               <v-card-title>
                 <div class="mx-5">
@@ -50,15 +49,31 @@
                 </div>
               </v-card-title>
               <v-card-actions>
-                <v-btn large rounded depressed :color="color" class="mx-auto white--text"
+                <v-btn
+                  large
+                  rounded
+                  depressed
+                  :color="color"
+                  class="mx-auto white--text"
                   >ADD TO MY SHOP</v-btn
                 >
               </v-card-actions>
             </v-card>
-          </div>
         </v-col>
       </v-row>
     </v-container>
+    <loader
+      v-if="loader"
+      object="#ff9633"
+      color1="#ffffff"
+      color2="#17fd3d"
+      size="5"
+      speed="2"
+      bg="#343a40"
+      objectbg="#999793"
+      opacity="80"
+      name="circular"
+    ></loader>
   </v-container>
 </template>
 
@@ -77,36 +92,15 @@ export default {
       title: "",
       price: "",
       img_url: "",
+      // ...............
+      loader: false,
     };
   },
   methods: {
     getLink() {
-      // if (this.search_value) {
-      //   const url = new URL(this.search_value);
-      //   const valid_url = Helpers.validURL(url);
-      //   console.log("valid", valid_url);
-      //   console.log("!valid", !valid_url);
-      //   if (valid_url) {
-      //     Swal.fire("Thank You", "Please Wait ....", "success");
-      //     let url = "http://localhost:5000/web";
-      //     let data_url = { data_url: this.search_value };
-      //     console.log("data_url", data_url);
-      //     Helpers.getData(url, data_url).then((response) => {
-      //       console.log("response", response);
-      //       const data = response.data;
-      //       this.title = data.title;
-      //       this.price = data.price;
-      //       this.img_url = data.image;
-      //     });
-      //     console.log("valid url", this.search_value);
-      //   }
-      //   if (!valid_url) {
-      //     Swal.fire("Opps", "Url Invalid", "error");
-      //   }
-      // }
       try {
         const url = new URL(this.search_value);
-        Swal.fire("Thank You", `Please Wait ....${url}`, "success");
+        this.loader = true;
         let r_url = "http://localhost:5000/web";
         let data_url = { data_url: this.search_value };
         console.log("data_url", data_url);
@@ -116,6 +110,8 @@ export default {
           this.title = data.title;
           this.price = data.price;
           this.img_url = data.image;
+          this.loader = false;
+          Swal.fire("Done", `Data scrap successfully ....${url}`, "success");
         });
       } catch (e) {
         Swal.fire("invalid", e.toString(), "error");
