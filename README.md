@@ -1,5 +1,9 @@
 # web-scrapper-vuejs
 
+![Screenshot](amazon-data-scrapper.png)
+![Screenshot](validation1.png)
+![Screenshot](validation2.png)
+
 ## Project setup
 ```
 npm install
