@@ -27,29 +27,101 @@
         </v-flex>
       </v-layout>
     </v-container>
+    <!-- ......................... -->
+    <v-container>
+      <v-row>
+        <v-col cols="10">
+          <div v-if="title && price && img_url">
+            <v-card height="650" width="350">
+              <v-img contain class="white--text" height="300px" :src="img_url">
+              </v-img>
+              <v-card-title>
+                <div class="mx-5">
+                  <span class="title blue--text">Title: {{ title }} </span
+                  ><br />
+                  <v-rating
+                    readonly
+                    small
+                    dense
+                    background-color="orange"
+                    color="orange"
+                  ></v-rating>
+                  <span class="title"> price: {{ price }} </span>
+                </div>
+              </v-card-title>
+              <v-card-actions>
+                <v-btn large rounded depressed :color="color" class="mx-auto white--text"
+                  >ADD TO MY SHOP</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-container>
 </template>
 
 <script>
 import { mdiMagnify } from "@mdi/js";
 import Helpers from "../helpers/Helpers.js";
+import Swal from "sweetalert2";
 export default {
   name: "Home",
   data() {
     return {
       mdiMagnify: mdiMagnify,
       search_value: "",
+      color: "pink",
+      // v-models for set product values
+      title: "",
+      price: "",
+      img_url: "",
     };
   },
   methods: {
     getLink() {
-      console.log("link", this.search_value);
-      const valid_url = Helpers.validURL(this.search_value);
-      console.log("d23ef", valid_url);
-      if (valid_url) {
-        console.log("valid url", this.search_value);
-      } else {
-        console.log("invalid url", this.search_value);
+      // if (this.search_value) {
+      //   const url = new URL(this.search_value);
+      //   const valid_url = Helpers.validURL(url);
+      //   console.log("valid", valid_url);
+      //   console.log("!valid", !valid_url);
+      //   if (valid_url) {
+      //     Swal.fire("Thank You", "Please Wait ....", "success");
+      //     let url = "http://localhost:5000/web";
+      //     let data_url = { data_url: this.search_value };
+      //     console.log("data_url", data_url);
+      //     Helpers.getData(url, data_url).then((response) => {
+      //       console.log("response", response);
+      //       const data = response.data;
+      //       this.title = data.title;
+      //       this.price = data.price;
+      //       this.img_url = data.image;
+      //     });
+      //     console.log("valid url", this.search_value);
+      //   }
+      //   if (!valid_url) {
+      //     Swal.fire("Opps", "Url Invalid", "error");
+      //   }
+      // }
+      try {
+        const url = new URL(this.search_value);
+        Swal.fire("Thank You", `Please Wait ....${url}`, "success");
+        let r_url = "http://localhost:5000/web";
+        let data_url = { data_url: this.search_value };
+        console.log("data_url", data_url);
+        Helpers.getData(r_url, data_url).then((response) => {
+          console.log("response", response);
+          const data = response.data;
+          this.title = data.title;
+          this.price = data.price;
+          this.img_url = data.image;
+        });
+      } catch (e) {
+        Swal.fire("invalid", e.toString(), "error");
+      }
+      if (!this.search_value) {
+        Swal.fire("Opps", "Please Enter link", "error");
       }
     },
   },

@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+import axios from "axios";
 export default {
   validURL: (str) => {
     var pattern = new RegExp(
@@ -9,6 +11,16 @@ export default {
         "(\\#[-a-z\\d_]*)?$",
       "i"
     ); // fragment locator
-    return !!pattern.test(str);
+    return pattern.test(str);
+  },
+  getData: async function(url, data_url) {
+    return await axios
+      .post(url, data_url)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        return error;
+      });
   },
 };
